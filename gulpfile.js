@@ -14,7 +14,6 @@ const imagemin = require('gulp-imagemin');
 const rollup = require('gulp-better-rollup');
 const sourcemaps = require('gulp-sourcemaps');
 const mocha = require('gulp-mocha');
-const commonjs = require('rollup-plugin-commonjs');
 
 gulp.task('style', function () {
   return gulp.src('sass/style.scss')
@@ -40,15 +39,22 @@ gulp.task('style', function () {
 });
 
 gulp.task('scripts', function () {
-  return gulp.src('js/**/*.js')
+  return gulp.src('js/main.js')
     .pipe(plumber())
     .pipe(sourcemaps.init())
     .pipe(rollup({}, 'iife'))
     .pipe(sourcemaps.write(''))
-    .pipe(gulp.dest('build/js/'));
+    .pipe(gulp.dest('build/js'));
 });
 
 gulp.task('test', function () {
+  return gulp
+    .src(['js/**/*.test.js'], { read: false })
+    .pipe(mocha({
+      ui: 'tdd',
+      compilers: ['js:babel-register'],
+      reporter: 'spec'
+    }));
 });
 
 gulp.task('imagemin', ['copy'], function () {
@@ -84,20 +90,6 @@ gulp.task('js-watch', ['scripts'], function (done) {
   done();
 });
 
-gulp.task('test', function () {
-  return gulp
-    .src([`js/**/*.test.js`])
-    .pipe(rollup({
-      plugin: [
-        commonjs()
-      ]
-    }, `cjs`))
-    .pipe(gulp.dest(`build/test`))
-    .pipe(mocha({
-      reporter: `spec`
-    }));
-});
-
 gulp.task('serve', ['assemble'], function () {
   server.init({
     server: './build',
@@ -120,6 +112,4 @@ gulp.task('assemble', ['clean'], function () {
   gulp.start('copy', 'style');
 });
 
-gulp.task('build', ['assemble'], function () {
-  gulp.start('imagemin');
-});
+gulp.task('build', ['assemble', 'imagemin']);
