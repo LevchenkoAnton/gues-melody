@@ -71,8 +71,8 @@ const initGameArtistsView = () => {
 
   const onAnswerClick = (evt) => {
     if ( !evt.target.closest('.main-answer-r') ) return;
-    const randomNumber = getValueFromRange(1, 3);
 
+    const randomNumber = getValueFromRange(1, 3);
     switch (randomNumber) {
       case 1: {
         changeView(resultWinView);

@@ -13,6 +13,8 @@ const rename = require('gulp-rename');
 const imagemin = require('gulp-imagemin');
 const rollup = require('gulp-better-rollup');
 const sourcemaps = require('gulp-sourcemaps');
+const mocha = require('gulp-mocha');
+const commonjs = require('rollup-plugin-commonjs');
 
 gulp.task('style', function () {
   return gulp.src('sass/style.scss')
@@ -80,6 +82,20 @@ gulp.task('clean', function () {
 gulp.task('js-watch', ['scripts'], function (done) {
   server.reload();
   done();
+});
+
+gulp.task('test', function () {
+  return gulp
+    .src([`js/**/*.test.js`])
+    .pipe(rollup({
+      plugin: [
+        commonjs()
+      ]
+    }, `cjs`))
+    .pipe(gulp.dest(`build/test`))
+    .pipe(mocha({
+      reporter: `spec`
+    }));
 });
 
 gulp.task('serve', ['assemble'], function () {
