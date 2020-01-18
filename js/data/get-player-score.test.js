@@ -3,7 +3,7 @@ import getPlayerScore from './get-player-score';
 
 let answers = [];
 
-suite(`Player result`, () => {
+suite(`Player score`, () => {
 
   test(`All low answers`, () => {
     answers = [
@@ -36,7 +36,7 @@ suite(`Player result`, () => {
       {correctly: false, time: 50}
     ];
 
-    assert.equal(getPlayerScore(answers, 2), 6);
+    assert.equal(getPlayerScore(answers, 1), 6);
   });
 
   test(`Not all answers`, () => {
@@ -50,7 +50,7 @@ suite(`Player result`, () => {
       {correctly: false, time: 16}
     ];
 
-    assert.equal(getPlayerScore(answers, 2), -1);
+    assert.equal(getPlayerScore(answers, 0), -1);
   });
 
   test(`No notes parameter`, () => {
