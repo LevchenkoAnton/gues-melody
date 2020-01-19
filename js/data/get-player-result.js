@@ -1,11 +1,19 @@
+const resultMessages = {
+  remainingTime: `Время вышло! Вы не успели отгадать все мелодии`,
+  remainingNotes: `У вас закончились все попытки. Ничего, повезёт в следующий раз!`,
+  success(currentPlayerPlace, players, defeatedPlayers) {
+    return `Вы заняли ${currentPlayerPlace} место из ${players} игроков. Это лучше, чем у ${defeatedPlayers}% игроков.`;
+  }
+};
+
 const getPlayerResult = (otherPlayersResult, currentPlayerResult) => {
 
   if (currentPlayerResult.remainingTime === 0) {
-    return `Время вышло! Вы не успели отгадать все мелодии`;
+    return resultMessages.remainingTime;
   }
 
   if (currentPlayerResult.remainingNotes < 0) {
-    return `У вас закончились все попытки. Ничего, повезёт в следующий раз!`;
+    return resultMessages.remainingNotes;
   }
 
   let playerStat = otherPlayersResult.slice();
@@ -15,8 +23,8 @@ const getPlayerResult = (otherPlayersResult, currentPlayerResult) => {
   const currentPlayerPlace = playerStat.length - currentPlayerWins;
   const defeatedPlayers = Math.round(currentPlayerWins / playerStat.length * 100);
 
-  return `Вы заняли ${currentPlayerPlace} место из ${playerStat.length} игроков. Это лучше, чем у ${defeatedPlayers}% игроков.`;
+  return resultMessages.success(currentPlayerPlace, playerStat.length, defeatedPlayers);
 
 };
 
-export default getPlayerResult;
+export {getPlayerResult as default, resultMessages};

@@ -1,19 +1,24 @@
 const ANSWERS_LENGTH = 10;
 const MIN_QUICK_ANSWER_TIME = 30;
+const POINTS_MAP = {
+  LOW_SUCCESS: 1,
+  FAST_SUCCESS: 2,
+  WRONG: -2
+};
 
 const calculateScore = (answers) => {
   return answers.reduce((playScore, answer) => {
 
     if (!answer.correctly) {
-      return playScore - 2;
+      return playScore + POINTS_MAP.WRONG;
     }
 
     if (answer.time <= MIN_QUICK_ANSWER_TIME) {
-      return playScore + 2;
+      return playScore + POINTS_MAP.FAST_SUCCESS;
     }
 
     if (answer.correctly) {
-      return playScore + 1;
+      return playScore + POINTS_MAP.LOW_SUCCESS;
     }
 
   }, 0);

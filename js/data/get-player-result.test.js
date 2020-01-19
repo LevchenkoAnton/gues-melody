@@ -1,5 +1,5 @@
 import assert from 'assert';
-import getPlayerResult from "./get-player-result";
+import getPlayerResult, {resultMessages} from "./get-player-result";
 
 const statistics = [4, 5, 8, 10, 11, 17, 20];
 let playerResult = {};
@@ -14,8 +14,8 @@ suite(`Player result`, () => {
     };
 
     assert.equal(getPlayerResult(statistics, playerResult),
-      `Вы заняли 3 место из 8 игроков. Это лучше, чем у 63% игроков.`
-      );
+      resultMessages.success(3, 8, 63)
+    );
   });
 
   test(`Player score is equal with other player`, () => {
@@ -26,7 +26,7 @@ suite(`Player result`, () => {
     };
 
     assert.equal(getPlayerResult(statistics, playerResult),
-      `Вы заняли 5 место из 8 игроков. Это лучше, чем у 38% игроков.`
+      resultMessages.success(5, 8, 38)
     );
   });
 
@@ -38,11 +38,11 @@ suite(`Player result`, () => {
     };
 
     assert.equal(getPlayerResult(statistics, playerResult),
-      `У вас закончились все попытки. Ничего, повезёт в следующий раз!`
+      resultMessages.remainingNotes
     );
   });
 
-  test(`time is over`, () => {
+  test(`Time is over`, () => {
     playerResult = {
       score: 10,
       remainingNotes: 2,
@@ -50,7 +50,7 @@ suite(`Player result`, () => {
     };
 
     assert.equal(getPlayerResult(statistics, playerResult),
-      `Время вышло! Вы не успели отгадать все мелодии`
+      resultMessages.remainingTime
     );
   });
 
