@@ -1,5 +1,6 @@
-import {createNode, changeView} from "../utils";
-import {gameGenreView, initGameGenreView} from "./level-genre";
+import {initialState} from "../data/game";
+import controlGame from "../control-game";
+import {createNode} from "../utils";
 
 const welcomeView = createNode(`
   <section class="main main--welcome js-main--welcome">
@@ -18,8 +19,7 @@ const initWelcomeView = () => {
   const playBtn = document.querySelector('.main-play');
 
   const onPlayBtnClick = (evt) => {
-    changeView(gameGenreView);
-    initGameGenreView();
+    controlGame(initialState);
   };
 
   playBtn.addEventListener('click', onPlayBtnClick);
