@@ -1,5 +1,5 @@
 import {createNode, changeView} from "../utils";
-import {gameArtistsView, initGameArtistsView} from "./game-artists";
+import {gameArtistsView, initGameArtistsView} from "./level-artists";
 
 const gameGenreView = createNode(`
   <section class="main main--level main--level-genre js-main--level-genre">
