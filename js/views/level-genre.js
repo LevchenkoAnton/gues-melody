@@ -1,93 +1,40 @@
-import {createNode, changeView} from "../utils";
-import {gameArtistsView, initGameArtistsView} from "./level-artists";
+import controlGame from "../control-game";
+import checkAnswer from "../data/check-answer";
+import {getTitleTemplate, getStateTemplate, getPlayerTemplate} from "../components/components";
+import {createNode} from "../utils";
 
-const gameGenreView = createNode(`
-  <section class="main main--level main--level-genre js-main--level-genre">
-    <svg xmlns="http://www.w3.org/2000/svg" class="timer" viewBox="0 0 780 780">
-      <circle
-        cx="390" cy="390" r="370"
-        class="timer-line"
-        style="filter: url(.#blur); transform: rotate(-90deg) scaleY(-1); transform-origin: center"></circle>
 
-      <div class="timer-value" xmlns="http://www.w3.org/1999/xhtml">
-        <span class="timer-value-mins">05</span><!--
-        --><span class="timer-value-dots">:</span><!--
-        --><span class="timer-value-secs">00</span>
+const getGenreAnswerTemplate = (answerIndex, answer) => {
+  return `
+    <div class="genre-answer">
+      ${getPlayerTemplate(answer.src)}
+      <input class="js-genre-answer-input" type="checkbox" name="answer" value="${answer.genre}" id="a-${answerIndex}">
+      <label class="genre-answer-check" for="a-${answerIndex}"></label>
+    </div>
+  `;
+};
+
+const getLevelGenreViewTemplate = (state, questionItem) => {
+  return `
+    <section class="main main--level main--level-genre js-main--level-genre">
+      ${getStateTemplate(state)}
+      <div class="main-wrap">
+        ${getTitleTemplate(questionItem.question)}
+        <form class="genre">
+
+          ${questionItem.answers.reduce((answerTemplate, currentAnswer, answerIndex) => {
+            return answerTemplate + getGenreAnswerTemplate(answerIndex, currentAnswer)
+          }, ``)}
+
+          <button class="genre-answer-send" type="submit" disabled>Ответить</button>
+        </form>
       </div>
-    </svg>
-    <div class="main-mistakes">
-      <img class="main-mistake" src="img/wrong-answer.png" width="35" height="49">
-      <img class="main-mistake" src="img/wrong-answer.png" width="35" height="49">
-      <img class="main-mistake" src="img/wrong-answer.png" width="35" height="49">
-    </div>
+    </section>
+  `;
+};
 
-    <div class="main-wrap">
-      <h2 class="title">Выберите инди-рок треки</h2>
-      <form class="genre">
-        <div class="genre-answer">
-          <div class="player-wrapper">
-            <div class="player">
-              <audio></audio>
-              <button class="player-control player-control--pause"></button>
-              <div class="player-track">
-                <span class="player-status"></span>
-              </div>
-            </div>
-          </div>
-          <input class="js-genre-answer-input" type="checkbox" name="answer" value="answer-1" id="a-1">
-          <label class="genre-answer-check" for="a-1"></label>
-        </div>
-
-        <div class="genre-answer">
-          <div class="player-wrapper">
-            <div class="player">
-              <audio></audio>
-              <button class="player-control player-control--play"></button>
-              <div class="player-track">
-                <span class="player-status"></span>
-              </div>
-            </div>
-          </div>
-          <input class="js-genre-answer-input" type="checkbox" name="answer" value="answer-1" id="a-2">
-          <label class="genre-answer-check" for="a-2"></label>
-        </div>
-
-        <div class="genre-answer">
-          <div class="player-wrapper">
-            <div class="player">
-              <audio></audio>
-              <button class="player-control player-control--play"></button>
-              <div class="player-track">
-                <span class="player-status"></span>
-              </div>
-            </div>
-          </div>
-          <input class="js-genre-answer-input" type="checkbox" name="answer" value="answer-1" id="a-3">
-          <label class="genre-answer-check" for="a-3"></label>
-        </div>
-
-        <div class="genre-answer">
-          <div class="player-wrapper">
-            <div class="player">
-              <audio></audio>
-              <button class="player-control player-control--play"></button>
-              <div class="player-track">
-                <span class="player-status"></span>
-              </div>
-            </div>
-          </div>
-          <input class="js-genre-answer-input" type="checkbox" name="answer" value="answer-1" id="a-4">
-          <label class="genre-answer-check" for="a-4"></label>
-        </div>
-
-        <button class="genre-answer-send" type="submit" disabled>Ответить</button>
-      </form>
-    </div>
-  </section>
-`);
-
-const initGameGenreView = () => {
-  const genreForm = document.querySelector('.genre');
+const initLevelGenreView = (state, question, levelGenreTemplate, currentPlayer) => {
+  const genreForm = levelGenreTemplate.querySelector('.genre');
   const answerInputs = Array.from(genreForm.querySelectorAll('.js-genre-answer-input'));
   const sendBtn = genreForm.querySelector('.genre-answer-send');
 
@@ -103,15 +50,25 @@ const initGameGenreView = () => {
 
   const onGenreFormSubmit = (evt) => {
     evt.preventDefault();
-
     if ( !isGetAnswer() ) return;
 
-    changeView(gameArtistsView);
-    initGameArtistsView();
+    const checkedAnswerInputs = Array.from(genreForm.querySelectorAll('.js-genre-answer-input:checked'));
+    const answers = checkedAnswerInputs.map(input => input.value);
+
+    checkAnswer(state, question, answers, currentPlayer);
+    controlGame(state);
   };
 
   genreForm.addEventListener('change', onGenreFormChange);
   genreForm.addEventListener('submit', onGenreFormSubmit);
 };
 
-export {gameGenreView, initGameGenreView};
+const getLevelGenreView = (state, question, currentPlayer) => {
+  const levelGenreTemplate = createNode(getLevelGenreViewTemplate(state, question));
+
+  initLevelGenreView(state, question, levelGenreTemplate, currentPlayer);
+
+  return levelGenreTemplate;
+};
+
+export default getLevelGenreView;

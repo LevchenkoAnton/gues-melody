@@ -1,6 +1,6 @@
 import {GAME_SETTINGS, questions, currentPlayer} from "./data/game";
 
-import {gameGenreView, initGameGenreView} from "./views/level-genre";
+import getLevelGenreView from "./views/level-genre";
 import {gameArtistsView, initGameArtistsView} from "./views/level-artists";
 import {resultFailTimeView} from "./views/result-fail-time";
 import {resultsFailTriesView} from "./views/results-fail-tries";
@@ -11,8 +11,7 @@ import initReplay from "./views/init-replay";
 
 const showNextQuestion = (state, question, currentPlayer) => {
   if (question.type === GAME_SETTINGS.QUESTION_TYPES.GENRE) {
-    changeView(gameGenreView);
-    initGameGenreView();
+    changeView(getLevelGenreView(state, question, currentPlayer));
     return;
   }
 

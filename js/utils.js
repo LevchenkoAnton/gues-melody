@@ -14,9 +14,8 @@ export const createNode = (template) => {
   return node.firstChild;
 };
 
-export const changeView = (view) => {
+export const changeView = (newView) => {
   lastView = document.querySelector('.main');
-  newView = view.cloneNode(true);
 
   main.replaceChild(newView, lastView);
 };

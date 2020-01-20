@@ -1,3 +1,5 @@
+const getTitleTemplate = (title) => `<h2 class="title">${title}</h2>`;
+
 const getStateTemplate = (state) => {
   return `
     <svg xmlns="http://www.w3.org/2000/svg" class="timer" viewBox="0 0 780 780">
@@ -21,4 +23,18 @@ const getStateTemplate = (state) => {
     `;
 };
 
-export {getStateTemplate};
+const getPlayerTemplate = (songSrc) => {
+  return `
+    <div class="player-wrapper">
+      <div class="player">
+        <audio src="${songSrc}"></audio>
+        <button class="player-control player-control--pause"></button>
+        <div class="player-track">
+          <span class="player-status"></span>
+        </div>
+      </div>
+    </div>
+  `;
+};
+
+export {getTitleTemplate, getStateTemplate, getPlayerTemplate};
